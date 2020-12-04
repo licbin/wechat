@@ -15,6 +15,7 @@ const (
 	getTagUserURL     = "https://api.weixin.qq.com/cgi-bin/user/tag/get?access_token=%s"
 	batchTaggingURL   = "https://api.weixin.qq.com/cgi-bin/tags/members/batchtagging?access_token=%s"
 	batchUnTaggingURL = "https://api.weixin.qq.com/cgi-bin/tags/members/batchuntagging?access_token=%s"
+	getUserTagsURL    = "https://api.weixin.qq.com/cgi-bin/tags/getidlist?access_token=%s"
 )
 
 // CreateTag - create tag
@@ -126,6 +127,21 @@ func (srv *defaultService) BatchUnTagging(tagID int, openidList []string) (*Batc
 
 	result := new(BatchUnTaggingResponse)
 	err := srv.Do(http.MethodPost, reqURL, req, result)
+	if err != nil {
+		return nil, err
+	}
+	result.ErrDesc = utils.GetErrDesc(result.ErrCode)
+	return result, nil
+}
+
+// GetUserTags - implement service
+func (srv *defaultService) GetUserTags(openid string) (*GetUserTagsResponse, error) {
+	reqURL := fmt.Sprintf(getUserTagsURL, srv.Get())
+	req := map[string]string{
+		"openid": openid,
+	}
+	result := new(GetUserTagsResponse)
+	err := srv.Do(http.MethodPost, reqURL, &req, result)
 	if err != nil {
 		return nil, err
 	}

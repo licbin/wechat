@@ -33,6 +33,9 @@ type Service interface {
 	BatchTagging(tagID int, openidList []string) (*BatchTaggingResponse, error)
 	// BatchUnTagging - 批量为用户取消标签,需要注意的是一个用户最多打上20个标签，另外每次传入的openid列表个数不能超过50个
 	BatchUnTagging(tagID int, openidList []string) (*BatchUnTaggingResponse, error)
+
+	// GetUserTags - 获取用户身上的标签列表
+	GetUserTags(openid string) (*GetUserTagsResponse, error)
 }
 
 type defaultService struct {

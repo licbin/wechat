@@ -83,3 +83,9 @@ type BatchUnTaggingRequest struct {
 type BatchUnTaggingResponse struct {
 	utils.Error
 }
+
+// GetUserTagsResponse - 获取用户TAGS
+type GetUserTagsResponse struct {
+	utils.Error
+	TagIDList []int `json:"tagid_list,omitempty"`
+}
