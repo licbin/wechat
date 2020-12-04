@@ -8,11 +8,13 @@ import (
 )
 
 const (
-	createTagURL  = "https://api.weixin.qq.com/cgi-bin/tags/create?access_token=%s"
-	getTagsURL    = "https://api.weixin.qq.com/cgi-bin/tags/get?access_token=%s"
-	updateTagURL  = "https://api.weixin.qq.com/cgi-bin/tags/update?access_token=%s"
-	deleteTagURL  = "https://api.weixin.qq.com/cgi-bin/tags/delete?access_token=%s"
-	getTagUserURL = "https://api.weixin.qq.com/cgi-bin/user/tag/get?access_token=%s"
+	createTagURL      = "https://api.weixin.qq.com/cgi-bin/tags/create?access_token=%s"
+	getTagsURL        = "https://api.weixin.qq.com/cgi-bin/tags/get?access_token=%s"
+	updateTagURL      = "https://api.weixin.qq.com/cgi-bin/tags/update?access_token=%s"
+	deleteTagURL      = "https://api.weixin.qq.com/cgi-bin/tags/delete?access_token=%s"
+	getTagUserURL     = "https://api.weixin.qq.com/cgi-bin/user/tag/get?access_token=%s"
+	batchTaggingURL   = "https://api.weixin.qq.com/cgi-bin/tags/members/batchtagging?access_token=%s"
+	batchUnTaggingURL = "https://api.weixin.qq.com/cgi-bin/tags/members/batchuntagging?access_token=%s"
 )
 
 // CreateTag - create tag
@@ -89,6 +91,40 @@ func (srv *defaultService) GetTagUserList(tagid int, nextOpenID string) (*GetUse
 	req.NextOpenID = nextOpenID
 
 	result := new(GetUserListResponse)
+	err := srv.Do(http.MethodPost, reqURL, req, result)
+	if err != nil {
+		return nil, err
+	}
+	result.ErrDesc = utils.GetErrDesc(result.ErrCode)
+	return result, nil
+}
+
+// BatchTagging - implement Service
+func (srv *defaultService) BatchTagging(tagID int, openidList []string) (*BatchTaggingResponse, error) {
+	reqURL := fmt.Sprintf(batchTaggingURL, srv.Get())
+
+	req := new(BatchTaggingRequest)
+	req.TagID = tagID
+	req.OpenIDList = openidList
+
+	result := new(BatchTaggingResponse)
+	err := srv.Do(http.MethodPost, reqURL, req, result)
+	if err != nil {
+		return nil, err
+	}
+	result.ErrDesc = utils.GetErrDesc(result.ErrCode)
+	return result, nil
+}
+
+// BatchUnTagging - implement Service
+func (srv *defaultService) BatchUnTagging(tagID int, openidList []string) (*BatchUnTaggingResponse, error) {
+	reqURL := fmt.Sprintf(batchUnTaggingURL, srv.Get())
+
+	req := new(BatchUnTaggingRequest)
+	req.TagID = tagID
+	req.OpenIDList = openidList
+
+	result := new(BatchUnTaggingResponse)
 	err := srv.Do(http.MethodPost, reqURL, req, result)
 	if err != nil {
 		return nil, err

@@ -61,3 +61,25 @@ type GetTagUserRequest struct {
 	TagID      int    `json:"tagid,omitempty"`
 	NextOpenID string `json:"next_openid,omitempty"`
 }
+
+// BatchTaggingRequest - 批量为用户打标签
+type BatchTaggingRequest struct {
+	TagID      int      `json:"tagid,omitempty"`
+	OpenIDList []string `json:"openid_list,omitempty"`
+}
+
+// BatchTaggingResponse - 批量为用户标签
+type BatchTaggingResponse struct {
+	utils.Error
+}
+
+// BatchUnTaggingRequest - batch un tagging
+type BatchUnTaggingRequest struct {
+	TagID      int      `json:"tagid,omitempty"`
+	OpenIDList []string `json:"openid_list,omitempty"`
+}
+
+// BatchUnTaggingResponse - batch un tagging
+type BatchUnTaggingResponse struct {
+	utils.Error
+}

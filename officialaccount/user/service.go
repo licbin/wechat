@@ -28,6 +28,11 @@ type Service interface {
 	// 当公众号关注者数量超过10000时，可通过填写next_openid的值，从而多次拉取列表的方式来满足需求。
 	// 关注者列表已返回完时，返回next_openid为空
 	GetTagUserList(tagid int, nextOpenID string) (*GetUserListResponse, error)
+
+	// BatchTagging - 批量为用户打标签,需要注意的是一个用户最多打上20个标签，另外每次传入的openid列表个数不能超过50个
+	BatchTagging(tagID int, openidList []string) (*BatchTaggingResponse, error)
+	// BatchUnTagging - 批量为用户取消标签,需要注意的是一个用户最多打上20个标签，另外每次传入的openid列表个数不能超过50个
+	BatchUnTagging(tagID int, openidList []string) (*BatchUnTaggingResponse, error)
 }
 
 type defaultService struct {

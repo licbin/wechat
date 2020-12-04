@@ -7,8 +7,15 @@ import (
 	"github.com/licbin/wechat/account"
 )
 
+const (
+	testAppID  = "wx950b68e93b5c0f8f"
+	testSecret = "9708e08d26f615abc025f9df0a03ac4f"
+	testOpenID = "oGFjE6H05ZiaEtvZ_VPjdeSsI--w"
+	testTagID  = 0
+)
+
 func Test_tag(t *testing.T) {
-	tr := account.NewDefaultTokenRequester("wx950b68e93b5c0f8f", "9708e08d26f615abc025f9df0a03ac4f")
+	tr := account.NewDefaultTokenRequester(testAppID, testSecret)
 	ts := account.NewTokenStore(tr)
 	token := ts.Get()
 	if token == "" {
@@ -77,5 +84,64 @@ func Test_tag(t *testing.T) {
 		}
 	}
 
-	// NewService(ts)
+}
+
+func Test_GetTagUserList(t *testing.T) {
+	tr := account.NewDefaultTokenRequester(testAppID, testSecret)
+	ts := account.NewTokenStore(tr)
+	token := ts.Get()
+	if token == "" {
+		t.Error("token is empty")
+		return
+	}
+
+	srv := NewService(ts)
+	resp, err := srv.GetTagUserList(0, "")
+	if err != nil {
+		t.Error("GetTagUserList is empty")
+		return
+	}
+
+	t.Logf("GetTagUserList: %v", resp.Data.OpenID)
+}
+
+func Test_BatchTaggingAndUnTagging(t *testing.T) {
+	tr := account.NewDefaultTokenRequester(testAppID, testSecret)
+	ts := account.NewTokenStore(tr)
+	token := ts.Get()
+	if token == "" {
+		t.Error("token is empty")
+		return
+	}
+	srv := NewService(ts)
+
+	tagName := "测试" + xstring.RandomNumber(2)
+	// 测试创建tag
+	resp1, err := srv.CreateTag(tagName)
+	if err != nil {
+		t.Errorf("CreateTag Error:%v", err)
+		return
+	}
+
+	resp, err := srv.BatchTagging(resp1.Tag.ID, []string{testOpenID})
+	if err != nil {
+		t.Error("BatchTagging ERR:", err)
+		return
+	}
+	if resp.ErrCode != 0 {
+		t.Errorf("BatchTagging errcode:%d,errmessgae:%s,errdesc:%s",
+			resp.ErrCode, resp.ErrMsg, resp.ErrDesc)
+		return
+	}
+
+	resp2, err := srv.BatchUnTagging(resp1.Tag.ID, []string{testOpenID})
+	if err != nil {
+		t.Error("BatchTagging ERR:", err)
+		return
+	}
+	if resp2.ErrCode != 0 {
+		t.Errorf("BatchTagging errcode:%d,errmessgae:%s,errdesc:%s",
+			resp.ErrCode, resp.ErrMsg, resp.ErrDesc)
+		return
+	}
 }
