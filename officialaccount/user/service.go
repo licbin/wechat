@@ -36,6 +36,12 @@ type Service interface {
 
 	// GetUserTags - 获取用户身上的标签列表
 	GetUserTags(openid string) (*GetUserTagsResponse, error)
+
+	// UpdateUserRemark - 设置用户备注名
+	UpdateUserRemark(openid, remark string) (*UpdateUserRemarkResponse, error)
+
+	// GetUserInfo - 获取用户基本信息（包括UnionID机制）
+	GetUserInfo(openid string) (*GetUserInfoResponse, error)
 }
 
 type defaultService struct {
