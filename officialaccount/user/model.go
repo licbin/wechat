@@ -13,6 +13,22 @@ type GetUserListResponse struct {
 	} `json:"data"` //列表数据，OPENID的列表
 }
 
+// GetBlackUserListResponse - 黑名单列表
+type GetBlackUserListResponse struct {
+	utils.Error
+	Total      int    `json:"total"`       //关注该公众账号的总用户数
+	Count      int    `json:"count"`       //拉取的OPENID个数，最大值为10000
+	NextOpenID string `json:"next_openid"` //拉取列表的最后一个用户的OPENID
+	Data       struct {
+		OpenID []string `json:"openid"`
+	} `json:"data"` //列表数据，OPENID的列表
+}
+
+// GetBlackUserListRequest - 黑名单列表请求体
+type GetBlackUserListRequest struct {
+	BeginOpenID string `json:"begin_openid,omitempty"`
+}
+
 // CreateTagRequest - 创建tag请求
 type CreateTagRequest struct {
 	Tag Tag `json:"tag,omitempty"`
@@ -121,4 +137,24 @@ type GetUserInfoResponse struct {
 	SubscribeScene string `json:"subscribe_scene,omitempty"` //返回用户关注的渠道来源，ADD_SCENE_SEARCH 公众号搜索，ADD_SCENE_ACCOUNT_MIGRATION 公众号迁移，ADD_SCENE_PROFILE_CARD 名片分享，ADD_SCENE_QR_CODE 扫描二维码，ADD_SCENE_PROFILE_LINK 图文页内名称点击，ADD_SCENE_PROFILE_ITEM 图文页右上角菜单，ADD_SCENE_PAID 支付后关注，ADD_SCENE_WECHAT_ADVERTISEMENT 微信广告，ADD_SCENE_OTHERS 其他
 	QRScene        int    `json:"qr_scene,omitempty"`        //二维码扫码场景（开发者自定义）
 	QRSceneStr     string `json:"qr_scene_str,omitempty"`    //二维码扫码场景描述（开发者自定义）
+}
+
+// BatchBlackListRequest - 拉黑用户请求
+type BatchBlackListRequest struct {
+	OpenIDList []string
+}
+
+// BatchBlackListResponse - 拉黑用户返回值
+type BatchBlackListResponse struct {
+	utils.Error
+}
+
+// BatchUnBlackListRequest - 取消拉黑用户请求
+type BatchUnBlackListRequest struct {
+	OpenIDList []string
+}
+
+// BatchUnBlackListResponse - 取消拉黑用户返回值
+type BatchUnBlackListResponse struct {
+	utils.Error
 }
